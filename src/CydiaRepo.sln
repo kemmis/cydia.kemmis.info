@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CydiaRepo.Web", "CydiaRepo.Web\CydiaRepo.Web.csproj", "{05F88D15-999E-43E8-95B1-E15DD544A4A7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dotnet-packaging", "dotnet-packaging", "{A95B9CB8-3762-40F8-8B0E-4E33CF5DB6AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CydiaRepo.Services", "CydiaRepo.Services\CydiaRepo.Services.csproj", "{4363DF6D-B0A9-480A-84AB-9532492A1A37}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Packaging.Targets", "dotnet-packaging\Packaging.Targets\Packaging.Targets.csproj", "{8BEC218C-0CF6-455F-905A-39824125E1DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05F88D15-999E-43E8-95B1-E15DD544A4A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05F88D15-999E-43E8-95B1-E15DD544A4A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05F88D15-999E-43E8-95B1-E15DD544A4A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05F88D15-999E-43E8-95B1-E15DD544A4A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4363DF6D-B0A9-480A-84AB-9532492A1A37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4363DF6D-B0A9-480A-84AB-9532492A1A37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4363DF6D-B0A9-480A-84AB-9532492A1A37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4363DF6D-B0A9-480A-84AB-9532492A1A37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BEC218C-0CF6-455F-905A-39824125E1DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BEC218C-0CF6-455F-905A-39824125E1DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BEC218C-0CF6-455F-905A-39824125E1DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BEC218C-0CF6-455F-905A-39824125E1DD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8BEC218C-0CF6-455F-905A-39824125E1DD} = {A95B9CB8-3762-40F8-8B0E-4E33CF5DB6AA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3754844B-26BD-442E-9CF6-6F60DE81EEAE}
+	EndGlobalSection
+EndGlobal

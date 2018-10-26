@@ -1,0 +1,119 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.5;netstandard2.0</TargetFrameworks>
+    <VersionPrefix>0.1.1</VersionPrefix>
+    <Authors>Frederik Carlier</Authors>
+    <Company>Quamotion</Company>
+    <Product>Packaging Tools for .NET CLI</Product>
+    <Description>This package supports the dotnet-pack and dotnet-zip packages. Once you've installed this package together with dotnet-zip or dotnet-tarball, you can run commands such as dotnet zip or dotnet tarball to generate .zip or .tar.gz archives which contain the published output of your project.</Description>
+    <Copyright>Copyright (c) Frederik Carlier and Contributors</Copyright>
+    <PackageLicenseUrl>https://github.com/qmfrederik/dotnet-packaging/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/qmfrederik/dotnet-packaging/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/qmfrederik/dotnet-packaging/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.5|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <!-- Copy build task assemby to build directory -->
+  <PropertyGroup>
+    <BuildOutputTargetFolder>tools</BuildOutputTargetFolder>
+    <!-- Suppress warning about lib being empty -->
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- MSBuild ships as part of the .NET CLI -->
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.3.409">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.3.409">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <!-- BoncyCastle and SharpZipLib are included in the lib\ folder in the Packaging.Targets package (see below), so we don't need an
+         explicit dependency on them, either -->
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.1.3">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="SharpZipLib.NETStandard" Version="0.86.0.1">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="SharpZipLib.NETStandard" Version="0.86.0.1">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="NerdBank.GitVersioning" Version="2.2.13">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.5'">
+    <PackageReference Include="System.Globalization.Extensions" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="build\*.*">
+      <Pack>true</Pack>
+      <PackagePath>build\</PackagePath>
+    </Content>
+    
+    <!-- SharpZipLib -->
+    <Content Include="$(NuGetPackageRoot)\sharpziplib.netstandard\0.86.0.1\lib\netstandard1.3\SharpZipLib.NETStandard.dll" Link="SharpZipLib.NETStandard.dll">
+      <Pack>true</Pack>
+      <PackagePath>tools\netstandard1.5\</PackagePath>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)\sharpziplib.netstandard\0.86.0.1\lib\netstandard1.3\SharpZipLib.NETStandard.dll" Link="SharpZipLib.NETStandard.dll">
+      <Pack>true</Pack>
+      <PackagePath>tools\netstandard2.0\</PackagePath>
+    </Content>
+
+    <!-- Bouncy Castle-->
+    <Content Include="$(NuGetPackageRoot)\portable.bouncycastle\1.8.1.3\lib\netstandard1.3\BouncyCastle.Crypto.dll" Link="BouncyCastle.Crypto.dll">
+      <Pack>true</Pack>
+      <PackagePath>tools\netstandard1.5\</PackagePath>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)\portable.bouncycastle\1.8.1.3\lib\netstandard2.0\BouncyCastle.Crypto.dll" Link="BouncyCastle.Crypto.dll">
+      <Pack>true</Pack>
+      <PackagePath>tools\netstandard2.0\</PackagePath>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="runtimes\win7-x64\native\lzma.dll">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win7-x64\native\</PackagePath>
+    </None>
+    <None Include="runtimes\win7-x64\native\lzma.dll" Link="lzma.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
+  <!-- Code analysis -->
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>dotnet-packaging.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <Target Name="WriteProperties" AfterTargets="Pack">
+    <ItemGroup>
+      <Line Include="line01"><Text>&lt;!-- This file is auto-generated. Do not edit manually --&gt;</Text></Line>
+      <Line Include="line01"><Text>&lt;Project&gt;</Text></Line>
+      <Line Include="line02"><Text>  &lt;PropertyGroup&gt;</Text></Line>
+      <Line Include="line03"><Text>    &lt;PackagingNuGetVersion&gt;$(NuGetPackageVersion)&lt;/PackagingNuGetVersion&gt;</Text></Line>
+      <Line Include="line04"><Text>  &lt;/PropertyGroup&gt;</Text></Line>
+      <Line Include="line05"><Text>&lt;/Project&gt;</Text></Line>
+      <LineText Include="%(Line.Text)" />
+    </ItemGroup>
+    <WriteLinesToFile
+       File="../demo/Directory.Build.props"
+       Lines="@(LineText)"
+      Overwrite="true" />
+  </Target>
+</Project>
