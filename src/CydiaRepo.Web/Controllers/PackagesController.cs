@@ -13,20 +13,19 @@ namespace CydiaRepo.Web.Controllers
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private string DebFolderPath => $@"{_hostingEnvironment.WebRootPath}\deb\";
-        private string RelativeToPath => $@"{_hostingEnvironment.WebRootPath}\";
 
         public PackagesController(IHostingEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public async Task Index()
-        {
-            using (var writer = new DebPackageControlWriter(Response.Body))
-            {
-                await writer.WriteControlsForDebFiles(DebFolderPath, RelativeToPath);
-            }
-        }
+        //public async Task Index()
+        //{
+        //    using (var writer = new DebPackageControlWriter(Response.Body))
+        //    {
+        //        await writer.WriteControlsForDebFiles(DebFolderPath);
+        //    }
+        //}
 
         [Route("Packages.bz2")]
         public async Task PackagesArchive()
@@ -34,7 +33,7 @@ namespace CydiaRepo.Web.Controllers
             using (var writer = new DebPackageControlCompressedWriter(Response.Body))
             {
                 Response.ContentType = "application/octet-stream";
-                await writer.WritePackagesArchive(DebFolderPath, RelativeToPath);
+                await writer.WritePackagesArchive(DebFolderPath);
             }
         }
     }

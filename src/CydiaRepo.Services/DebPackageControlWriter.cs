@@ -16,7 +16,7 @@ namespace cydia_repo.services
             _streamWriter.NewLine = "\n";
         }
 
-        public async Task WriteControlsForDebFiles(string debFileDirectory, string relativeToPath)
+        public async Task WriteControlsForDebFiles(string debFileDirectory)
         {
             var dirInfo = new DirectoryInfo(debFileDirectory);
             foreach (var fileInfo in dirInfo.GetFiles("*.deb"))
@@ -27,7 +27,7 @@ namespace cydia_repo.services
                     await WriteControlFileForDebPackage(debPackage);
                 }
 
-                await WriteFileNameForDebPackage(fileInfo, relativeToPath);
+                await WriteFileNameForDebPackage(fileInfo);
                 await WriteFileSizeForDebPackage(fileInfo);
                 await WriteHashValuesForDebPackage(fileInfo.FullName);
                 await _streamWriter.WriteLineAsync(); // adds empty line after each control file
@@ -52,9 +52,9 @@ namespace cydia_repo.services
             await _streamWriter.WriteLineAsync($"SHA256: {hashingService.Sha256}");
         }
 
-        private async Task WriteFileNameForDebPackage(FileInfo fileInfo, string relativeToPath)
+        private async Task WriteFileNameForDebPackage(FileInfo fileInfo)
         {
-            var relativePath = $"Filename: ./{fileInfo.FullName.Replace(relativeToPath, "").Replace(@"\", "/")}";
+            var relativePath = $"Filename: ./package/{fileInfo.Name}";
             await _streamWriter.WriteLineAsync(relativePath);
         }
 
