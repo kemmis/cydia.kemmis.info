@@ -19,13 +19,14 @@ namespace CydiaRepo.Web.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
-        //public async Task Index()
-        //{
-        //    using (var writer = new DebPackageControlWriter(Response.Body))
-        //    {
-        //        await writer.WriteControlsForDebFiles(DebFolderPath);
-        //    }
-        //}
+        [Route("/packages")]
+        public async Task Index()
+        {
+            using (var writer = new DebPackageControlWriter(Response.Body))
+            {
+                await writer.WriteControlsForDebFiles(DebFolderPath);
+            }
+        }
 
         [Route("Packages.bz2")]
         public async Task PackagesArchive()
