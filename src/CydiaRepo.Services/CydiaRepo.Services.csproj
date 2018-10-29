@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Noemax.Compression" Version="17.301.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\dotnet-packaging\Packaging.Targets\Packaging.Targets.csproj" />
   </ItemGroup>
 
