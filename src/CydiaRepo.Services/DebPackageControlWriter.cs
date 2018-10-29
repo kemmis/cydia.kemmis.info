@@ -13,6 +13,7 @@ namespace cydia_repo.services
         public DebPackageControlWriter(Stream stream)
         {
             _streamWriter = new StreamWriter(stream);
+            _streamWriter.NewLine = "\n";
         }
 
         public async Task WriteControlsForDebFiles(string debFileDirectory, string relativeToPath)
