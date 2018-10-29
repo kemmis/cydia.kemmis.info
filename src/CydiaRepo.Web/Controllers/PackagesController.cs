@@ -34,6 +34,7 @@ namespace CydiaRepo.Web.Controllers
             using (var writer = new DebPackageControlCompressedWriter(Response.Body))
             {
                 await writer.WritePackagesArchive(DebFolderPath, RelativeToPath);
+                Response.ContentType = "application/octet-stream";
             }
         }
     }
