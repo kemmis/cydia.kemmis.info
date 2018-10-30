@@ -9,6 +9,24 @@ namespace cydia_repo.services
 {
     public class DebPackageControlWriter : IDisposable
     {
+        private static readonly string[] _controlEntries = new[]
+        {
+            "Package",
+            "Version",
+            "Architecture",
+            "Maintainer",
+            "Installed-Size",
+            "Depends",
+            "Filename",
+            "Size",
+            "MD5sum",
+            "SHA1",
+            "SHA256",
+            "Section",
+            "Description",
+            "Author",
+            "Name"
+        };
         private readonly StreamWriter _streamWriter;
         public DebPackageControlWriter(Stream stream)
         {
@@ -21,35 +39,31 @@ namespace cydia_repo.services
             var dirInfo = new DirectoryInfo(debFileDirectory);
             foreach (var fileInfo in dirInfo.GetFiles("*.deb"))
             {
+                Dictionary<string, string> controlEntries;
+
                 using (var debFileStream = File.OpenRead(fileInfo.FullName))
                 {
                     var debPackage = await DebPackageReader.Read(debFileStream);
-                    await WriteControlFileForDebPackage(debPackage);
+                    controlEntries = debPackage.ControlFile;
                 }
 
-                await WriteFileNameForDebPackage(fileInfo);
-                await WriteFileSizeForDebPackage(fileInfo);
-                await WriteHashValuesForDebPackage(fileInfo.FullName);
+                controlEntries.Add("FileName", fileInfo.Name);
+                controlEntries.Add("Size", fileInfo.Length.ToString());
+                var hashingService = new PackageHashingService(fileInfo.FullName);
+                controlEntries.Add("MD5sum", hashingService.Md5);
+                controlEntries.Add("SHA1", hashingService.Sha1);
+                controlEntries.Add("SHA256", hashingService.Sha256);
+
+                foreach (var controlEntry in _controlEntries)
+                {
+                    if (controlEntries.ContainsKey(controlEntry))
+                    {
+                        await _streamWriter.WriteLineAsync($"{controlEntry}: {controlEntries[controlEntry]}");
+                    }
+                }
+
                 await _streamWriter.WriteLineAsync(); // adds empty line after each control file
-
             }
-        }
-
-        private async Task WriteControlFileForDebPackage(DebPackage debPackage)
-        {
-            var controlFile = debPackage.ControlFile;
-            foreach (var controlFileKey in controlFile.Keys)
-            {
-                await _streamWriter.WriteLineAsync($"{controlFileKey}: {controlFile[controlFileKey]}");
-            }
-        }
-
-        private async Task WriteHashValuesForDebPackage(string debPackagepath)
-        {
-            var hashingService = new PackageHashingService(debPackagepath);
-            await _streamWriter.WriteLineAsync($"MD5sum: {hashingService.Md5}");
-            await _streamWriter.WriteLineAsync($"SHA1: {hashingService.Sha1}");
-            await _streamWriter.WriteLineAsync($"SHA256: {hashingService.Sha256}");
         }
 
         private async Task WriteFileNameForDebPackage(FileInfo fileInfo)
@@ -57,12 +71,7 @@ namespace cydia_repo.services
             var relativePath = $"Filename: ./package/{fileInfo.Name}";
             await _streamWriter.WriteLineAsync(relativePath);
         }
-
-        private async Task WriteFileSizeForDebPackage(FileInfo fileInfo)
-        {
-            await _streamWriter.WriteLineAsync($"Size: {fileInfo.Length}");
-        }
-
+        
         public void Dispose()
         {
             _streamWriter?.Dispose();
