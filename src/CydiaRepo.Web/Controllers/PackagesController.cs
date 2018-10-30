@@ -21,15 +21,10 @@ namespace CydiaRepo.Web.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
+        [ResponseCache(Duration = 600)]
         [Route("/packages")]
         public async Task<IActionResult> Index()
         {
-            string requestETag = "";
-            if (Request.Headers.ContainsKey("If-None-Match"))
-            {
-                requestETag = Request.Headers["If-None-Match"].First();
-            }
-
             var ms = new MemoryStream();
             DateTime lastModified;
 
@@ -37,28 +32,15 @@ namespace CydiaRepo.Web.Controllers
             {
                 lastModified = await writer.WriteControlsForDebFiles(DebFolderPath);
             }
-
-            string responseETag = Convert.ToBase64String(BitConverter.GetBytes(lastModified.Ticks));
-
-            if (Request.Headers.ContainsKey("If-None-Match") && responseETag == requestETag)
-            {
-                return StatusCode((int)HttpStatusCode.NotModified);
-            }
-
+            
             var bytes = ms.ToArray();
-            return File(bytes, "application/octet-stream", new DateTimeOffset(lastModified), new EntityTagHeaderValue(responseETag));
+            return File(bytes, "application/octet-stream", new DateTimeOffset(lastModified), GetETag(lastModified,bytes));
         }
 
+        [ResponseCache(Duration = 600)]
         [Route("Packages.bz2")]
         public async Task<IActionResult> PackagesArchive()
         {
-            // Get the requested ETag
-            string requestETag = "";
-            if (Request.Headers.ContainsKey("If-None-Match"))
-            {
-                requestETag = Request.Headers["If-None-Match"].First();
-            }
-
             var ms = new MemoryStream();
             DateTime lastModified;
 
@@ -66,16 +48,16 @@ namespace CydiaRepo.Web.Controllers
             {
                 lastModified = await writer.WritePackagesArchive(DebFolderPath);
             }
-
-            string responseETag = Convert.ToBase64String(BitConverter.GetBytes(lastModified.Ticks));
-
-            if (Request.Headers.ContainsKey("If-None-Match") && responseETag == requestETag)
-            {
-                return StatusCode((int)HttpStatusCode.NotModified);
-            }
-
+            
             var bytes = ms.ToArray();
-            return File(bytes, "application/octet-stream", new DateTimeOffset(lastModified), new EntityTagHeaderValue(responseETag));
+            return File(bytes, "application/octet-stream", new DateTimeOffset(lastModified), GetETag(lastModified, bytes));
         }
+
+        private EntityTagHeaderValue GetETag(DateTime lastModified, Byte[] data)
+        {
+            var etagHash = lastModified.ToFileTimeUtc() ^ data.Length;
+            return new EntityTagHeaderValue('\"' + Convert.ToString(etagHash, 16) + '\"');
+        }
+
     }
 }
