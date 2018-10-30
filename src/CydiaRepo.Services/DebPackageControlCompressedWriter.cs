@@ -15,7 +15,7 @@ namespace cydia_repo.services
 
         public DebPackageControlCompressedWriter(Stream stream)
         {
-            _compressionStream = CompressionFactory.BZip2.CreateOutputStream(stream, 0, true);
+            _compressionStream = CompressionFactory.BZip2.CreateOutputStream(stream, -9, true);
             _debPackageControlWriter = new DebPackageControlWriter(_compressionStream);
         }
 
