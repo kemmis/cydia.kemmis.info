@@ -29,13 +29,17 @@ namespace CydiaRepo.Web.Controllers
         }
 
         [Route("Packages.bz2")]
-        public async Task PackagesArchive()
+        public async Task<IActionResult> PackagesArchive()
         {
-            using (var writer = new DebPackageControlCompressedWriter(Response.Body))
+            var ms = new MemoryStream();
+
+            using (var writer = new DebPackageControlCompressedWriter(ms))
             {
-                Response.ContentType = "application/octet-stream";
                 await writer.WritePackagesArchive(DebFolderPath);
             }
+
+            var bytes = ms.ToArray();
+            return File(bytes, "application/octet-stream");
         }
     }
 }
