@@ -34,8 +34,10 @@ namespace cydia_repo.services
             _streamWriter.NewLine = "\n";
         }
 
-        public async Task WriteControlsForDebFiles(string debFileDirectory)
+        public async Task<DateTime> WriteControlsForDebFiles(string debFileDirectory)
         {
+            DateTime? lastModified = null;
+
             var dirInfo = new DirectoryInfo(debFileDirectory);
             foreach (var fileInfo in dirInfo.GetFiles("*.deb"))
             {
@@ -63,7 +65,14 @@ namespace cydia_repo.services
                 }
 
                 await _streamWriter.WriteLineAsync(); // adds empty line after each control file
+
+                if (lastModified == null || lastModified < fileInfo.LastWriteTimeUtc)
+                {
+                    lastModified = fileInfo.LastWriteTimeUtc;
+                }
             }
+
+            return lastModified ?? DateTime.UtcNow;
         }
 
         private async Task WriteFileNameForDebPackage(FileInfo fileInfo)
@@ -71,7 +80,7 @@ namespace cydia_repo.services
             var relativePath = $"Filename: ./package/{fileInfo.Name}";
             await _streamWriter.WriteLineAsync(relativePath);
         }
-        
+
         public void Dispose()
         {
             _streamWriter?.Dispose();

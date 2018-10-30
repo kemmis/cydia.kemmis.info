@@ -19,9 +19,9 @@ namespace cydia_repo.services
             _debPackageControlWriter = new DebPackageControlWriter(_compressionStream);
         }
 
-        public async Task WritePackagesArchive(string debFileDirectory)
+        public async Task<DateTime> WritePackagesArchive(string debFileDirectory)
         {
-            await _debPackageControlWriter.WriteControlsForDebFiles(debFileDirectory);
+            return await _debPackageControlWriter.WriteControlsForDebFiles(debFileDirectory);
         }
 
         public void Dispose()
