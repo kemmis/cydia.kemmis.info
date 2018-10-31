@@ -26,6 +26,7 @@ namespace CydiaRepo.Web.Controllers
         {
             var debPath = GetSafePath(debFile);
             if (!System.IO.File.Exists(debPath)) return NotFound();
+            TrackDebDownload(debFile);
             var debStream = System.IO.File.OpenRead(debPath);
             return File(debStream, "application/x-debian-package");
         }
@@ -36,7 +37,6 @@ namespace CydiaRepo.Web.Controllers
             var safePath = Path.GetFullPath(Path.Combine(debFolder, debFile));
             if (safePath.StartsWith(debFolder))
             {
-                TrackDebDownload(debFile);
                 return safePath;
             }
 
