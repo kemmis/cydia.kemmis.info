@@ -17,7 +17,7 @@ namespace cydia_repo.services
             "Maintainer",
             "Installed-Size",
             "Depends",
-            "Filename",
+            "FileName",
             "Size",
             "MD5sum",
             "SHA1",
