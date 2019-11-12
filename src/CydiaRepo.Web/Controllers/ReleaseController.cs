@@ -19,7 +19,7 @@ namespace CydiaRepo.Web.Controllers
             sb.Append("Suite: stable\n");
             sb.Append("Version: 1.2\n");
             sb.Append("Codename: ios\n");
-            sb.Append("Architectures: iphoneos - arm\n");
+            sb.Append("Architectures: iphoneos-arm\n");
             sb.Append("Components: main\n");
             sb.Append("Description: cydia.kemmis.info\n");
 
