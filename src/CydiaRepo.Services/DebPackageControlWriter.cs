@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -17,7 +17,7 @@ namespace cydia_repo.services
             "Maintainer",
             "Installed-Size",
             "Depends",
-            "FileName",
+            "Filename",
             "Size",
             "MD5sum",
             "SHA1",
@@ -49,7 +49,7 @@ namespace cydia_repo.services
                     controlEntries = debPackage.ControlFile;
                 }
 
-                controlEntries.Add("FileName", fileInfo.Name);
+                controlEntries.Add("Filename", fileInfo.Name);
                 controlEntries.Add("Size", fileInfo.Length.ToString());
                 var hashingService = new PackageHashingService(fileInfo.FullName);
                 controlEntries.Add("MD5sum", hashingService.Md5);

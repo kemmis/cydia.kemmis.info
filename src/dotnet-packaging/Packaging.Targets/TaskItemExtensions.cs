@@ -1,4 +1,4 @@
-﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Framework;
 using System;
 using System.IO;
 using System.Linq;
@@ -59,7 +59,7 @@ namespace Packaging.Targets
             }
 
             var relativeDirectory = item.GetMetadata("RelativeDir");
-            var filename = item.GetMetadata("FileName");
+            var filename = item.GetMetadata("Filename");
             var extension = item.GetMetadata("Extension");
 
             return Path.Combine(relativeDirectory, $"{filename}{extension}").Replace("\\", "/");
